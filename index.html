@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://ferrelldevin.github.io/">
+<title>Pages Switchboard</title>
+<meta name="description" content="Every page ferrelldevin publishes on GitHub Pages, one list, one tap each. Type to narrow it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* BW-09 Pages Switchboard. Source of record: departments/build/wip/BW-09-pages-hub/hub.html.
+     Every href below is checked live by departments/build/gate-a-bw-09-hub.sh (Gate A, A6). */
+  :root {
+    --paper: #f6f7f9;
+    --card: #ffffff;
+    --ink: #171c24;
+    --ink-2: #4c5563;
+    --ink-3: #7c8594;
+    --rule: #dde1e7;
+    --rule-2: #eceef2;
+    --accent: #23457c;
+    --accent-ink: #ffffff;
+    --accent-soft: #e5ebf6;
+    --live: #1c7a4f;
+    --live-soft: #e2f3ea;
+    --moved: #8a6218;
+    --moved-soft: #f7efd9;
+    --focus: #23457c;
+    --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --font-body: "IBM Plex Sans", "Segoe UI", Roboto, system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12161c;
+      --card: #1a2028;
+      --ink: #e9ecf1;
+      --ink-2: #b4bcc8;
+      --ink-3: #7f8896;
+      --rule: #2c343f;
+      --rule-2: #232a33;
+      --accent: #9fb8e6;
+      --accent-ink: #0f1a2e;
+      --accent-soft: #223149;
+      --live: #6fcf97;
+      --live-soft: #16301f;
+      --moved: #e0b45a;
+      --moved-soft: #3a2d12;
+      --focus: #9fb8e6;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #12161c;
+    --card: #1a2028;
+    --ink: #e9ecf1;
+    --ink-2: #b4bcc8;
+    --ink-3: #7f8896;
+    --rule: #2c343f;
+    --rule-2: #232a33;
+    --accent: #9fb8e6;
+    --accent-ink: #0f1a2e;
+    --accent-soft: #223149;
+    --live: #6fcf97;
+    --live-soft: #16301f;
+    --moved: #e0b45a;
+    --moved-soft: #3a2d12;
+    --focus: #9fb8e6;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 16px 64px; }
+
+  /* Head */
+  header.top { padding: 28px 0 12px; }
+  .eyebrow {
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-3); margin: 0 0 6px;
+  }
+  h1 {
+    font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 6vw, 40px);
+    line-height: 1.05; letter-spacing: -0.01em; margin: 0 0 8px; text-wrap: balance;
+  }
+  .lede { color: var(--ink-2); margin: 0; max-width: 60ch; }
+  .lede a { color: var(--accent); text-decoration: none; font-family: var(--font-mono); font-size: 0.94em; }
+  .lede a:hover { text-decoration: underline; }
+
+  /* Search, pinned */
+  .search {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--paper); padding: 12px 0 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .search-row { display: flex; gap: 8px; align-items: center; }
+  .search input {
+    flex: 1; min-width: 0; height: 46px; padding: 0 14px;
+    font: 500 16px var(--font-body); color: var(--ink);
+    background: var(--card); border: 1px solid var(--rule); border-radius: 10px;
+  }
+  .search input::placeholder { color: var(--ink-3); }
+  .search input:focus { border-color: var(--focus); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+  .count {
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .hint { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); margin: 8px 0 0; }
+  .hint kbd {
+    font: inherit; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 4px;
+    padding: 0 5px; color: var(--ink-2);
+  }
+
+  /* Sites */
+  .site { margin-top: 28px; }
+  .site-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+    flex-wrap: wrap; margin-bottom: 8px;
+  }
+  .site-name {
+    font-family: var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: -0.005em;
+    margin: 0; line-height: 1.15;
+  }
+  .site-name a { text-decoration: none; }
+  .site-name a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+  .site-tools { display: flex; gap: 6px; align-items: center; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px;
+    border-radius: 999px; font: 500 12px var(--font-mono); text-decoration: none;
+    border: 1px solid var(--rule); color: var(--ink-2); background: var(--card);
+    letter-spacing: 0.02em; cursor: pointer;
+  }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .chip.primary:hover { filter: brightness(1.08); color: var(--accent-ink); }
+  .site-blurb { color: var(--ink-2); margin: 0 0 12px; font-size: 15px; max-width: 62ch; }
+
+  .rows { list-style: none; margin: 0; padding: 0; border: 1px solid var(--rule); border-radius: 12px; background: var(--card); overflow: hidden; }
+  .row { border-top: 1px solid var(--rule-2); }
+  .row:first-child { border-top: 0; }
+  .row a.link {
+    display: grid; grid-template-columns: 1fr auto; grid-template-areas: "title status" "desc desc" "path path";
+    gap: 2px 10px; padding: 12px 14px; text-decoration: none;
+  }
+  .row a.link:hover { background: var(--accent-soft); }
+  .row.sub a.link { padding-left: 28px; }
+  .row.sub .title::before { content: "└ "; color: var(--ink-3); font-family: var(--font-mono); }
+  .title { grid-area: title; font-weight: 600; font-size: 16px; line-height: 1.3; }
+  .status { grid-area: status; align-self: start; margin-top: 2px; }
+  .desc { grid-area: desc; color: var(--ink-2); font-size: 14px; }
+  .path { grid-area: path; font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); margin-top: 3px; word-break: break-all; }
+
+  .pill {
+    display: inline-block; font: 500 11px var(--font-mono); letter-spacing: 0.04em;
+    padding: 2px 7px; border-radius: 6px; white-space: nowrap;
+  }
+  .pill.live { color: var(--live); background: var(--live-soft); }
+  .pill.moved { color: var(--moved); background: var(--moved-soft); }
+  .pill.app { color: var(--accent); background: var(--accent-soft); }
+
+  /* Retired addresses */
+  .site.retired .rows { background: transparent; }
+  .site.retired .title { font-weight: 500; color: var(--ink-2); }
+  .site.retired .desc { font-size: 13px; }
+
+  /* Repos strip */
+  .repos { margin-top: 32px; }
+  .repos h2 { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin: 0 0 8px; }
+  .repo-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
+  .repo-list a { text-decoration: none; }
+
+  .empty { display: none; padding: 24px 4px; color: var(--ink-2); }
+  .empty.show { display: block; }
+  .hidden { display: none !important; }
+
+  footer {
+    margin-top: 40px; padding-top: 14px; border-top: 1px solid var(--rule);
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); line-height: 1.6;
+  }
+  footer a { color: var(--ink-2); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 8px;
+    font: 500 13px var(--font-mono); opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">ferrelldevin · GitHub Pages</p>
+    <h1>Pages Switchboard</h1>
+    <p class="lede">Every page live under <a>ferrelldevin.github.io</a>, one list, served at that root address itself. Tap a row to open it. Type to narrow the list.</p>
+  </header>
+
+  <div class="search">
+    <div class="search-row">
+      <input id="q" type="search" placeholder="Find a page — kanji, planner, claims…" autocomplete="off" spellcheck="false" aria-label="Filter pages">
+      <span class="count" id="count" aria-live="polite"></span>
+    </div>
+    <p class="hint">Press <kbd>/</kbd> to search · <kbd>Esc</kbd> clears · <kbd>Enter</kbd> opens the first match</p>
+  </div>
+
+  <p class="empty" id="empty">Nothing matches. Try one word, or clear the box.</p>
+
+  <!-- ============ STUDY KIT ============ -->
+  <section class="site" data-site="studykit">
+    <div class="site-head">
+      <h2 class="site-name"><a href="https://ferrelldevin.github.io/studykit/">Study Kit</a></h2>
+      <div class="site-tools">
+        <a class="chip primary" href="https://ferrelldevin.github.io/studykit/">Open site</a>
+        <button class="chip copy" type="button" data-copy="https://ferrelldevin.github.io/studykit/">Copy link</button>
+        <a class="chip" href="https://github.com/ferrelldevin/studykit">Source</a>
+      </div>
+    </div>
+    <p class="site-blurb">Free study sheets for ODU Japanese courses. Built from the assigned lessons only, no romaji.</p>
+    <ul class="rows">
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/studykit/kurikaeshi/">
+        <span class="title">Kurikaeshi</span><span class="status"><span class="pill app">app</span></span>
+        <span class="desc">Spaced-repetition study cards for any course. Runs on your phone, works offline, keeps nothing anywhere but your own browser. Version 0.5.1.</span>
+        <span class="path">/studykit/kurikaeshi/</span></a></li>
+      <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/studykit/kurikaeshi/for-your-class.html">
+        <span class="title">Kurikaeshi for your class</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">For the instructor. Written to be forwarded to students as-is; the first half is theirs.</span>
+        <span class="path">/studykit/kurikaeshi/for-your-class.html</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/studykit/japn301/say-it-first/">
+        <span class="title">Say It First</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">JAPN 301 Lesson 1 self-introduction written out, with menus of ready-made options, so speaking is reading aloud rather than composing.</span>
+        <span class="path">/studykit/japn301/say-it-first/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/studykit/japn309/kanji-quiz-prep/">
+        <span class="title">Kanji Quiz Prep, L1 to L4</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">All 64 kanji of Kanji Quiz 1: a cold sheet first, then tap-to-reveal drills for only what you missed.</span>
+        <span class="path">/studykit/japn309/kanji-quiz-prep/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/studykit/japn309/writing-the-thirty-two/">
+        <span class="title">Writing the Thirty-Two</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">The 32 kanji of Kanji Look and Learn lessons 3 and 4, drilled for handwriting: stroke counts, characters built from parts you own, the pairs that cost marks.</span>
+        <span class="path">/studykit/japn309/writing-the-thirty-two/</span></a></li>
+    </ul>
+  </section>
+
+  <!-- ============ VETERAN RESOURCES ============ -->
+  <section class="site" data-site="veteran-resources">
+    <div class="site-head">
+      <h2 class="site-name"><a href="https://ferrelldevin.github.io/veteran-resources/">Veteran Resources</a></h2>
+      <div class="site-tools">
+        <a class="chip primary" href="https://ferrelldevin.github.io/veteran-resources/">Open site</a>
+        <button class="chip copy" type="button" data-copy="https://ferrelldevin.github.io/veteran-resources/">Copy link</button>
+        <a class="chip" href="https://github.com/ferrelldevin/veteran-resources">Source</a>
+      </div>
+    </div>
+    <p class="site-blurb">Organized, cited pages and links for veteran students and the people who help them. The office hub.</p>
+    <ul class="rows">
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/">
+        <span class="title">Veteran Benefits Kit · ODU</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">The front door to the kit: the three pages a veteran student, a work-study desk, or a counselor needs, and the VA and ODU pages behind them. One link to bookmark.</span>
+        <span class="path">/veteran-resources/education/odu-benefits-kit/</span></a></li>
+      <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/benefit/">
+        <span class="title">Which Benefit Am I On</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">VA education benefits side by side: who each chapter is for, what it pays and to whom, the current rate with its dates, the role to ask.</span>
+        <span class="path">/veteran-resources/education/odu-benefits-kit/benefit/</span></a></li>
+      <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/desk/">
+        <span class="title">Benefits Front-Desk Map</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">Fourteen situations a veteran student brings to the desk, each with one check, the branches, the action or hand-over, and the source beside it.</span>
+        <span class="path">/veteran-resources/education/odu-benefits-kit/desk/</span></a></li>
+      <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/planner/">
+        <span class="title">Semester Pay Planner</span><span class="status"><span class="pill app">app</span></span>
+        <span class="desc">Enter your classes; see, for each stretch of the term, whether you are above half time, whether you keep the in-person housing rate, and the monthly figure that follows.</span>
+        <span class="path">/veteran-resources/education/odu-benefits-kit/planner/</span></a></li>
+      <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/qr/">
+        <span class="title">QR codes</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">One code per page: SVG for a poster or door sign, PNG for a document or slide, and a ready-made card PDF with the address typed out.</span>
+        <span class="path">/veteran-resources/education/odu-benefits-kit/qr/</span></a></li>
+      <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/qr/office-scan-card.html">
+        <span class="title">Office scan card</span><span class="status"><span class="pill live">print</span></span>
+        <span class="desc">For the desk, not the student handout. Tape it inside the drawer or by the monitor; the code opens the live map with every line's sources.</span>
+        <span class="path">/veteran-resources/education/odu-benefits-kit/qr/office-scan-card.html</span></a></li>
+      <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/qr/student-scan-sheet.html">
+        <span class="title">Student scan sheet</span><span class="status"><span class="pill live">print</span></span>
+        <span class="desc">Scan one. Starts with the front door if you are not sure; every page shows the answer first and the VA rule one tap away.</span>
+        <span class="path">/veteran-resources/education/odu-benefits-kit/qr/student-scan-sheet.html</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/education/">
+        <span class="title">Education benefits</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">Which VA education benefit you are on, what a semester pays, and what the certifying office does with each question. Front door to the kit's four pages.</span>
+        <span class="path">/veteran-resources/education/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/claims/">
+        <span class="title">Claims, ratings and help</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">Where a disability claim, a rating question, or any question in writing goes, and who may charge you nothing. Issuer links only; nothing built here yet.</span>
+        <span class="path">/veteran-resources/claims/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/health/">
+        <span class="title">Health care</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">Enrolling in VA health care, what it covers, and where to go, including mental health, which does not wait for enrollment. Issuer links only.</span>
+        <span class="path">/veteran-resources/health/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/home-loans/">
+        <span class="title">Home loans</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">The VA-backed home loan: what it is, whether you qualify, and the Certificate of Eligibility the lender asks for. Issuer links only.</span>
+        <span class="path">/veteran-resources/home-loans/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/careers/">
+        <span class="title">Careers and employment</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">Getting from service to work: VA's employment programs, and tools for the paperwork, including the resume generator whose build fails on a claim it cannot defend.</span>
+        <span class="path">/veteran-resources/careers/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/transition/">
+        <span class="title">Transition assistance</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">Leaving service, or recently out: the programs that run before and after the last day, and the counseling that is free either way. Issuer links only.</span>
+        <span class="path">/veteran-resources/transition/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/study/">
+        <span class="title">Study sheets for ODU courses</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">Not veteran-specific, but built for the same students: the Study Kit sheets, reached from the veteran side.</span>
+        <span class="path">/veteran-resources/study/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/print/">
+        <span class="title">Printouts</span><span class="status"><span class="pill live">print</span></span>
+        <span class="desc">Every page as a PDF, ready to print for a veteran or save to your system. Each printed page carries its own sources.</span>
+        <span class="path">/veteran-resources/print/</span></a></li>
+    </ul>
+  </section>
+
+  <!-- ============ RETIRED ADDRESSES ============ -->
+  <section class="site retired" data-site="retired">
+    <div class="site-head">
+      <h2 class="site-name">Old addresses</h2>
+    </div>
+    <p class="site-blurb">Still resolve, but only to send you somewhere newer. Share the new address, not these.</p>
+    <ul class="rows">
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/vetkit/">
+        <span class="title">vetkit</span><span class="status"><span class="pill moved">moved</span></span>
+        <span class="desc">The kit's first home. Every page here redirects into Veteran Resources · education · odu-benefits-kit.</span>
+        <span class="path">/vetkit/ · /vetkit/benefit/ · /vetkit/desk/ · /vetkit/planner/ · /vetkit/qr/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/studykit/japn309/kanji-queue/">
+        <span class="title">Kanji Queue</span><span class="status"><span class="pill moved">moved</span></span>
+        <span class="desc">Kurikaeshi's name before the rename. Redirects to /studykit/kurikaeshi/.</span>
+        <span class="path">/studykit/japn309/kanji-queue/</span></a></li>
+      <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/studykit/japn309/kanji-queue/for-your-class.html">
+        <span class="title">Kanji Queue for your class</span><span class="status"><span class="pill moved">old copy</span></span>
+        <span class="desc">An earlier copy of the instructor's page, still served under the old name. Use Kurikaeshi for your class instead.</span>
+        <span class="path">/studykit/japn309/kanji-queue/for-your-class.html</span></a></li>
+    </ul>
+  </section>
+
+  <!-- ============ REPOS WITHOUT A SITE ============ -->
+  <section class="repos" data-site="repos">
+    <h2>On GitHub, no site</h2>
+    <ul class="repo-list">
+      <li><a class="chip" href="https://github.com/ferrelldevin/resume-gate">resume-gate</a></li>
+      <li><a class="chip" href="https://github.com/ferrelldevin/va-chapter31-worksheet">va-chapter31-worksheet</a></li>
+      <li><a class="chip" href="https://github.com/ferrelldevin/ferrelldevin">ferrelldevin (profile)</a></li>
+      <li><a class="chip" href="https://github.com/ferrelldevin?tab=repositories">all repositories</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <div>Links checked live <span id="asof">2026-09-06</span> by <code>gate-a-bw-09-hub.sh</code>: every row returns 200, live rows carry no redirect, moved rows do.</div>
+    <div>Source of record: the private <code>workshop</code> repo, <code>departments/build/wip/BW-09-pages-hub/hub.html</code>. A new page on any site is added here by hand, then the gate re-runs.</div>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status">Copied</div>
+
+<script>
+(function () {
+  var q = document.getElementById('q');
+  var count = document.getElementById('count');
+  var empty = document.getElementById('empty');
+  var rows = Array.prototype.slice.call(document.querySelectorAll('.row'));
+  var sites = Array.prototype.slice.call(document.querySelectorAll('.site'));
+  var repos = document.querySelector('.repos');
+  var total = rows.length;
+
+  function norm(s) { return (s || '').toLowerCase(); }
+  function hay(row) {
+    if (!row._hay) {
+      var site = row.closest('.site');
+      row._hay = norm(row.textContent + ' ' + (site ? site.querySelector('.site-name').textContent : ''));
+    }
+    return row._hay;
+  }
+
+  function apply() {
+    var terms = norm(q.value).split(/\s+/).filter(Boolean);
+    var shown = 0;
+    rows.forEach(function (row) {
+      var h = hay(row);
+      var ok = terms.every(function (t) { return h.indexOf(t) !== -1; });
+      row.classList.toggle('hidden', !ok);
+      if (ok) shown++;
+    });
+    sites.forEach(function (site) {
+      var any = site.querySelector('.row:not(.hidden)');
+      site.classList.toggle('hidden', !any);
+    });
+    if (repos) repos.classList.toggle('hidden', terms.length > 0);
+    count.textContent = terms.length ? shown + ' of ' + total : total + ' pages';
+    empty.classList.toggle('show', shown === 0);
+    try { localStorage.setItem('switchboard.q', q.value); } catch (e) {}
+  }
+
+  q.addEventListener('input', apply);
+  q.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { q.value = ''; apply(); }
+    if (e.key === 'Enter') {
+      var first = document.querySelector('.row:not(.hidden) a.link');
+      if (first) window.location.href = first.href;
+    }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); q.select(); }
+  });
+
+  try { var saved = localStorage.getItem('switchboard.q'); if (saved) q.value = saved; } catch (e) {}
+  apply();
+
+  var toast = document.getElementById('toast'), timer;
+  function say(msg) {
+    toast.textContent = msg; toast.classList.add('show');
+    clearTimeout(timer); timer = setTimeout(function () { toast.classList.remove('show'); }, 1400);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('button.copy'), function (b) {
+    b.addEventListener('click', function () {
+      var url = b.getAttribute('data-copy');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () { say('Copied'); }, function () { say(url); });
+      } else { say(url); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
