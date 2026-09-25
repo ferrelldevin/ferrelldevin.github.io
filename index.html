@@ -196,6 +196,12 @@
   .repo-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; list-style: none; }
   .repo-list a { text-decoration: none; }
 
+  .private-tag {
+    display: inline-block; font: 500 11px var(--font-mono); letter-spacing: 0.04em;
+    padding: 2px 7px; border-radius: 6px; margin-left: 8px; vertical-align: middle;
+    color: var(--moved); background: var(--moved-soft);
+  }
+
   .empty { display: none; padding: 24px 4px; color: var(--ink-2); }
   .empty.show { display: block; }
   .hidden { display: none !important; }
@@ -396,17 +402,6 @@
         <span class="title">vetkit</span><span class="status"><span class="pill moved">moved</span></span>
         <span class="desc">The kit's first home. Every page here redirects into Veteran Resources · education · odu-benefits-kit.</span>
         <span class="path">/vetkit/ · /vetkit/benefit/ · /vetkit/desk/ · /vetkit/planner/ · /vetkit/qr/</span></a></li>
-      <li class="row parent" data-id="/studykit/japn309/kanji-queue/"><a class="link" href="https://ferrelldevin.github.io/studykit/japn309/kanji-queue/">
-        <span class="title">Kanji Queue</span><span class="status"><span class="pill moved">moved</span></span>
-        <span class="desc">Kurikaeshi's name before the rename. Redirects to /studykit/kurikaeshi/.</span>
-        <span class="path">/studykit/japn309/kanji-queue/</span></a>
-        <button class="fold" type="button" aria-expanded="true" aria-label="Collapse pages under Kanji Queue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
-        <ul class="children">
-          <li class="row sub"><a class="link" href="https://ferrelldevin.github.io/studykit/japn309/kanji-queue/for-your-class.html">
-            <span class="title">Kanji Queue for your class</span><span class="status"><span class="pill moved">moved</span></span>
-            <span class="desc">The instructor's page under the old name. Redirects to Kurikaeshi for your class.</span>
-            <span class="path">/studykit/japn309/kanji-queue/for-your-class.html</span></a></li>
-        </ul></li>
     </ul>
     </div>
   </section>
@@ -422,8 +417,19 @@
     </ul>
   </section>
 
+  <section class="repos" data-site="private">
+    <h2>Working boards <span class="private-tag">private — don't share this section</span></h2>
+    <p class="site-blurb">Not on Pages and not public. Everything above is meant to be handed to
+    someone; these two are the live job search, and the tracker is VR&amp;E Chapter 31
+    documentation. They are listed here so the switchboard is actually the one place to start.</p>
+    <ul class="repo-list">
+      <li><a class="chip" href="https://claude.ai/code/artifact/80719aa3-eaef-48d2-912a-74800f60a2c8">Apply Desk — every open req</a></li>
+      <li><a class="chip" href="https://docs.google.com/spreadsheets/d/1lmm17vJmkmVoKWKnoMoU8JHe5HSxNIe8dvHmLa0TiSI/edit">Job Application Tracker</a></li>
+    </ul>
+  </section>
+
   <footer>
-    <div>Links checked live <span id="asof">2026-09-15</span> by <code>gate-a-bw-09-hub.sh</code>: every row returns 200, live rows carry no redirect, moved rows do, and every address on every site has a row.</div>
+    <div>Links checked live <span id="asof">2026-09-25</span> by <code>gate-a-bw-09-hub.sh</code>: every row returns 200, live rows carry no redirect, moved rows do, and every address on every site has a row. The private working boards are not fetched — they need a login, so a green gate says nothing about them.</div>
     <div>Source of record: the private <code>workshop</code> repo, <code>departments/build/wip/BW-09-pages-hub/hub.html</code>. A new page on any site is added here by hand, then the gate re-runs.</div>
     <div>Theme and folded sections are remembered in this browser only.</div>
   </footer>
@@ -440,7 +446,7 @@
   var rows = Array.prototype.slice.call(document.querySelectorAll('.row'));
   var sites = Array.prototype.slice.call(document.querySelectorAll('.site'));
   var parents = Array.prototype.slice.call(document.querySelectorAll('.row.parent'));
-  var repos = document.querySelector('.repos');
+  var repos = Array.prototype.slice.call(document.querySelectorAll('.repos'));
   var total = rows.length;
 
   function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -535,7 +541,7 @@
       var any = site.querySelector('.row:not(.hidden)');
       site.classList.toggle('hidden', !any);
     });
-    if (repos) repos.classList.toggle('hidden', terms.length > 0);
+    repos.forEach(function (r) { r.classList.toggle('hidden', terms.length > 0); });
     if (terms.length) {
       // searching opens everything so matches are visible; the saved folds return on clear
       sites.forEach(function (s) { setSite(s, false); });
