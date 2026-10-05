@@ -263,6 +263,28 @@
 
   <p class="empty" id="empty">Nothing matches. Try one word, or clear the box.</p>
 
+  <!-- ============ PROJECTS ============ -->
+  <section class="site" data-site="projects">
+    <div class="site-head" aria-expanded="true">
+      <button class="fold" type="button" aria-label="Collapse Projects" aria-controls="body-projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+      <h2 class="site-name"><a href="https://ferrelldevin.github.io/projects/">Projects</a><span class="site-count"></span></h2>
+      <div class="site-tools">
+        <a class="chip primary" href="https://ferrelldevin.github.io/projects/">Open site</a>
+        <button class="chip copy" type="button" data-copy="https://ferrelldevin.github.io/projects/">Copy link</button>
+        <a class="chip" href="https://github.com/ferrelldevin/ferrelldevin.github.io">Source</a>
+      </div>
+    </div>
+    <div class="site-body" id="body-projects">
+    <p class="site-blurb">The page to hand to an employer: live demos, how each is built, and one release story from each.</p>
+    <ul class="rows">
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/projects/">
+        <span class="title">Devin Ferrell · Projects</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">Software built with AI coding agents. Nothing ships on the builder's say-so.</span>
+        <span class="path">/projects/</span></a></li>
+    </ul>
+    </div>
+  </section>
+
   <!-- ============ STUDY KIT ============ -->
   <section class="site" data-site="studykit">
     <div class="site-head" aria-expanded="true">
@@ -279,7 +301,7 @@
     <ul class="rows">
       <li class="row parent" data-id="/studykit/kurikaeshi/"><a class="link" href="https://ferrelldevin.github.io/studykit/kurikaeshi/">
         <span class="title">Kurikaeshi</span><span class="status"><span class="pill app">app</span></span>
-        <span class="desc">Spaced-repetition study cards for any course. Runs on your phone, works offline, keeps nothing anywhere but your own browser. Version 0.5.1.</span>
+        <span class="desc">Spaced-repetition study cards for any course. Runs on your phone, works offline, progress stays in this browser unless you choose to sign in and sync.</span>
         <span class="path">/studykit/kurikaeshi/</span></a>
         <button class="fold" type="button" aria-expanded="true" aria-label="Collapse pages under Kurikaeshi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
         <ul class="children">
@@ -381,6 +403,10 @@
         <span class="title">Study sheets for ODU courses</span><span class="status"><span class="pill live">live</span></span>
         <span class="desc">Not veteran-specific, but built for the same students: the Study Kit sheets, reached from the veteran side.</span>
         <span class="path">/veteran-resources/study/</span></a></li>
+      <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/study/calc2-ch9/">
+        <span class="title">Chapter 9 Field Guide</span><span class="status"><span class="pill live">live</span></span>
+        <span class="desc">MATH 212 Chapter 9, sequences and series: every section's words, rules, a worked example, and answer-first practice cards.</span>
+        <span class="path">/veteran-resources/study/calc2-ch9/</span></a></li>
       <li class="row"><a class="link" href="https://ferrelldevin.github.io/veteran-resources/print/">
         <span class="title">Printouts</span><span class="status"><span class="pill live">print</span></span>
         <span class="desc">Every page as a PDF, ready to print for a veteran or save to your system. Each printed page carries its own sources.</span>
@@ -429,7 +455,7 @@
   </section>
 
   <footer>
-    <div>Links checked live <span id="asof">2026-09-25</span> by <code>gate-a-bw-09-hub.sh</code>: every row returns 200, live rows carry no redirect, moved rows do, and every address on every site has a row. The private working boards are not fetched — they need a login, so a green gate says nothing about them.</div>
+    <div>Links checked live <span id="asof">2026-10-05</span> by <code>gate-a-bw-09-hub.sh</code>: every row returns 200, live rows carry no redirect, moved rows do, and every address on every site has a row. The private working boards are not fetched — they need a login, so a green gate says nothing about them.</div>
     <div>Source of record: the private <code>workshop</code> repo, <code>departments/build/wip/BW-09-pages-hub/hub.html</code>. A new page on any site is added here by hand, then the gate re-runs.</div>
     <div>Theme and folded sections are remembered in this browser only.</div>
   </footer>
