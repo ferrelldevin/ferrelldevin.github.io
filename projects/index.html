@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Devin Ferrell · Projects</title>
+<meta name="description" content="Software built with AI coding agents and released only after someone other than the builder checks it. Live demos, how each is built, and one release story from each.">
+<script>(function(){var t='light';try{if(localStorage.getItem('theme')==='dark')t='dark'}catch(e){}var r=document.documentElement;r.setAttribute('data-theme',t);r.style.colorScheme=t})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a release record. Hero states the method and draws the pipeline; each project is a
+   two-column spread (the real product in a device frame | what it is, how it's built, how it
+   ships), and every release story is drawn as its own evidence: rounds, dollars, a regex. */
+:root{
+  --paper:#F3F5F8; --card:#FFFFFF; --ink:#0F1828; --soft:#556175; --line:#D9DFE8;
+  --accent:#2A55C4; --accent-ink:#FFFFFF; --accent-wash:#E6ECFA;
+  --pass:#1E7A4C; --pass-wash:#E2F2E9; --fail:#B23F28; --fail-wash:#FBE7E2;
+  --frame:#1A2230; --shadow:0 1px 2px rgba(15,24,40,.06),0 12px 32px -12px rgba(15,24,40,.22);
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+:root[data-theme="dark"]{
+  --paper:#0C121C; --card:#141C29; --ink:#E6ECF4; --soft:#9AA7BA; --line:#263245;
+  --accent:#86A8F5; --accent-ink:#0C121C; --accent-wash:#1A2742;
+  --pass:#6FCF9C; --pass-wash:#13301F; --fail:#F19983; --fail-wash:#3A1D16;
+  --frame:#05080D; --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 36px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--paper);color:var(--ink);font:16.5px/1.62 var(--body);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%;display:block}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.08;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+.mono{font-family:var(--mono)}
+.label{font:500 11.5px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--soft)}
+.shell{max-width:1120px;margin:0 auto;padding-inline:20px}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.bar .shell{display:flex;align-items:center;gap:14px;height:56px}
+.mark{font:800 17px var(--display);letter-spacing:-.02em;color:var(--ink);text-decoration:none;white-space:nowrap}
+.nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}
+.nav::-webkit-scrollbar{display:none}
+@media (max-width:700px){.nav{-webkit-mask-image:linear-gradient(to right,#000 78%,transparent);mask-image:linear-gradient(to right,#000 78%,transparent)}}
+.nav a{font:500 13.5px var(--body);color:var(--soft);text-decoration:none;padding:6px 10px;border-radius:7px;white-space:nowrap}
+.nav a:hover{color:var(--ink);background:var(--accent-wash)}
+.toggle{flex:none;font:500 12.5px var(--mono);background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:99px;padding:5px 11px;cursor:pointer}
+.toggle:hover{border-color:var(--accent)}
+
+/* hero */
+.hero{padding-block:64px 40px;display:grid;gap:28px}
+.hero h1{font-size:clamp(44px,8.4vw,92px);font-weight:800;letter-spacing:-.035em;margin-bottom:-6px}
+.hero h1 span{color:var(--accent)}
+.thesis{font:700 clamp(26px,3.4vw,38px)/1.15 var(--display);max-width:22ch;letter-spacing:-.02em;color:var(--ink)}
+.thesis em{font-style:normal;color:var(--accent)}
+.intro .thesis{color:var(--ink)}
+.intro{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px 56px;align-items:start}
+.intro p{color:var(--soft);max-width:58ch}
+.intro p b{color:var(--ink);font-weight:600}
+.contact{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;font:500 13px var(--mono);color:var(--ink);text-decoration:none;
+  background:var(--card);border:1px solid var(--line);border-radius:99px;padding:6px 12px}
+a.chip:hover{border-color:var(--accent);color:var(--accent)}
+@media (max-width:760px){.intro{grid-template-columns:1fr}}
+
+/* pipeline */
+.pipe{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 22px 18px;box-shadow:var(--shadow)}
+.pipe-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;position:relative}
+.steps::before{content:"";position:absolute;left:7%;right:7%;top:15px;height:2px;background:var(--line)}
+.steps::after{content:"";position:absolute;top:11px;left:7%;width:10px;height:10px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 5px var(--accent-wash);animation:travel 6s cubic-bezier(.6,0,.4,1) infinite}
+@keyframes travel{0%{left:7%;opacity:0}6%{opacity:1}88%{left:calc(93% - 10px);opacity:1}100%{left:calc(93% - 10px);opacity:0}}
+.step{position:relative;text-align:center;padding:0 4px;display:grid;justify-items:center;gap:8px}
+.dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:2px solid var(--line);
+  font:500 12px var(--mono);color:var(--soft);position:relative;z-index:1}
+.step.gate .dot{border-color:var(--accent);color:var(--accent)}
+.step.live .dot{border-color:var(--pass);background:var(--pass);color:var(--card)}
+.step b{font:600 14px/1.25 var(--body)}
+.step small{font-size:12.5px;line-height:1.35;color:var(--soft);max-width:16ch}
+@media (max-width:820px){
+  .steps{grid-template-columns:1fr;gap:12px}
+  .steps::before{left:15px;right:auto;top:8px;bottom:8px;width:2px;height:auto}
+  .steps::after{display:none}
+  .step{grid-template-columns:32px 1fr;justify-items:start;text-align:left;column-gap:12px;row-gap:0;padding:0}
+  .step .dot{grid-row:span 2}
+  .step small{max-width:none}
+}
+@media (prefers-reduced-motion:reduce){.steps::after{animation:none;display:none}html{scroll-behavior:auto}}
+
+/* figures */
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.fig{border-top:3px solid var(--ink);padding-top:10px}
+.fig b{display:block;font:800 clamp(30px,4vw,44px)/1 var(--display);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.fig span{font-size:13.5px;color:var(--soft)}
+@media (max-width:640px){.figs{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:22px}}
+
+/* project spreads */
+.project{padding-block:72px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:44px 64px;align-items:start}
+.project.flip .media{order:2}
+.project.flip .text{order:1}
+@media (max-width:900px){.project{grid-template-columns:1fr;padding-block:56px}.project.flip .media{order:0}}
+.text{display:grid;gap:18px;min-width:0}
+.eyebrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.status{font:500 11.5px var(--mono);letter-spacing:.04em;padding:3px 9px;border-radius:99px;background:var(--pass-wash);color:var(--pass)}
+.status.private{background:var(--accent-wash);color:var(--accent)}
+.status::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;margin-right:6px;vertical-align:1px}
+.text h2{font-size:clamp(34px,4.6vw,52px);font-weight:800;letter-spacing:-.03em}
+.what{font-size:18px;line-height:1.5;color:var(--ink);max-width:52ch}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 15px var(--body);text-decoration:none;border-radius:10px;padding:11px 18px;
+  background:var(--ink);color:var(--paper);transition:transform .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn svg{width:15px;height:15px}
+.stack{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.stack li{font:500 12.5px var(--mono);padding:4px 9px;border-radius:6px;background:var(--card);border:1px solid var(--line)}
+.rows{display:grid;gap:0;margin:0}
+.row{display:grid;grid-template-columns:118px minmax(0,1fr);gap:16px;padding-block:14px;border-top:1px solid var(--line)}
+.row dt{padding-top:3px}
+.row dd{margin:0;color:var(--ink);max-width:60ch}
+.row dd .soft{color:var(--soft)}
+@media (max-width:560px){.row{grid-template-columns:1fr;gap:4px}}
+
+/* release-story panels */
+.story{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 16px;display:grid;gap:12px}
+.story p{max-width:62ch}
+.story .lesson{font:500 15px/1.45 var(--display);letter-spacing:-.005em}
+.rounds{display:flex;flex-wrap:wrap;gap:8px}
+.round{display:grid;gap:2px;min-width:84px;padding:9px 12px;border-radius:10px;font:500 12px var(--mono)}
+.round b{font:700 17px var(--display)}
+.round.f{background:var(--fail-wash);color:var(--fail)}
+.round.p{background:var(--pass-wash);color:var(--pass)}
+.money{display:grid;grid-template-columns:auto auto 1fr;gap:6px 16px;align-items:center}
+.money .was{font:800 40px/1 var(--display);color:var(--fail);text-decoration:line-through;text-decoration-thickness:3px}
+.money .now{font:800 40px/1 var(--display);color:var(--pass)}
+.money .arrow{font:500 22px var(--mono);color:var(--soft)}
+.money small{grid-column:1/-1;font:500 12.5px var(--mono);color:var(--soft)}
+.regex{font:500 14px/1.7 var(--mono);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 14px;overflow-x:auto}
+.regex mark{background:var(--fail-wash);color:var(--fail);border-radius:3px;padding:0 2px}
+.regex .ok{color:var(--pass)}
+
+/* device frames */
+.media{min-width:0;position:relative}
+@media (min-width:901px){.media{position:sticky;top:88px}}
+.phones{display:flex;justify-content:center;align-items:flex-start;gap:0;padding:8px 0 20px}
+.phone{width:min(46%,240px);border-radius:34px;padding:9px;background:var(--frame);box-shadow:var(--shadow);position:relative}
+.phone img{border-radius:26px;width:100%;height:auto;aspect-ratio:390/844;object-fit:cover;object-position:top}
+.phone::before{content:"";position:absolute;top:16px;left:50%;transform:translateX(-50%);width:28%;height:7px;border-radius:9px;background:var(--frame);z-index:1}
+.phones .phone:nth-child(1){transform:rotate(-4deg) translateX(14px);z-index:1}
+.phones .phone:nth-child(2){transform:rotate(3.5deg) translate(-14px,34px);z-index:2}
+.phones.single .phone{width:min(64%,290px);transform:none}
+.browser{border-radius:12px;overflow:hidden;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.chrome{display:flex;align-items:center;gap:6px;padding:9px 12px;background:var(--paper);border-bottom:1px solid var(--line)}
+.chrome i{width:10px;height:10px;border-radius:50%;background:var(--line);display:block}
+.chrome span{margin-left:10px;font:400 12px var(--mono);color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;
+  background:var(--card);border:1px solid var(--line);border-radius:6px;padding:3px 10px;flex:1}
+.browser img{width:100%;height:auto;aspect-ratio:1280/800;object-fit:cover;object-position:top}
+.stacked{display:grid;gap:18px}
+.stacked .phone-tuck{justify-self:end;margin-top:-120px;margin-right:18px;width:min(36%,190px);transform:rotate(2.5deg)}
+@media (max-width:560px){.stacked .phone-tuck{margin-top:-70px}}
+.caption{font:500 12px var(--mono);color:var(--soft);text-align:center;margin-top:10px}
+
+/* boxes illustration for the class page */
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow);display:grid;gap:14px}
+.sheet-line{height:9px;border-radius:5px;background:var(--line)}
+.sheet-line.s{width:62%}.sheet-line.m{width:82%}
+.boxes{display:grid;grid-template-columns:repeat(auto-fill,minmax(14px,1fr));gap:5px}
+.boxes i{display:block;aspect-ratio:1;border-radius:3px;border:1.5px solid var(--accent);background:var(--accent-wash)}
+.sheet .label{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+
+/* system diagram */
+.agents{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.agent{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:4px}
+.agent b{font:700 16px var(--display)}
+.agent span{font-size:13.5px;color:var(--soft);line-height:1.4}
+.agent.judge{border-color:var(--accent);background:var(--accent-wash)}
+.guard{grid-column:1/-1;display:flex;gap:10px;align-items:center;font-size:13.5px;color:var(--soft);padding:12px 14px;border:1px dashed var(--line);border-radius:12px}
+.guard b{color:var(--ink);font-weight:600}
+
+/* closing */
+.close{padding-block:64px 80px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+.close h2{font-size:clamp(28px,3.6vw,40px);font-weight:800}
+.gh{display:grid;gap:12px}
+.gh a{display:grid;gap:2px;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.gh a:hover{border-color:var(--accent)}
+.gh a b{font:700 17px var(--display)}
+.gh a span{font-size:14px;color:var(--soft)}
+.learn p{color:var(--soft);margin-top:12px;max-width:46ch}
+@media (max-width:760px){.close{grid-template-columns:1fr}}
+footer{border-top:1px solid var(--line);padding-block:20px 36px;font:400 12.5px var(--mono);color:var(--soft);display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="shell">
+    <a class="mark" href="#top">Devin Ferrell</a>
+    <nav class="nav" aria-label="Projects">
+      <a href="#kurikaeshi">Kurikaeshi</a>
+      <a href="#benefits">Benefits Kit</a>
+      <a href="#classpage">Class page</a>
+      <a href="#studykit">Study Kit</a>
+      <a href="#system">How it's built</a>
+    </nav>
+    <button type="button" class="toggle" id="themeBtn" aria-label="Switch colour theme">Dark</button>
+  </div>
+</header>
+
+<main class="shell" id="top">
+  <section class="hero">
+    <div class="label">Computer science · Old Dominion University · U.S. Air Force veteran</div>
+    <h1>Projects<span>.</span></h1>
+    <div class="intro">
+      <p class="thesis">Software built with AI coding agents. <em>Nothing ships on the builder's say-so.</em></p>
+      <div style="display:grid;gap:14px">
+        <p>I'm an ODU computer science student (senior standing by credits, expected to graduate May 2028). Since June 2026 I've set the requirements, directed the agents, reviewed every change, and put every release through automated checks and an independent AI review. <b>Most of the code is agent-written. The requirements, the review and the decision to release are mine.</b></p>
+        <div class="contact">
+          <a class="chip" href="https://github.com/ferrelldevin">github.com/ferrelldevin</a>
+          <a class="chip" href="https://www.linkedin.com/in/devin-ferrell">linkedin.com/in/devin-ferrell</a>
+          <span class="chip">ferrelldevin01@gmail.com</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pipe" aria-label="How every release moves">
+      <div class="pipe-head"><span class="label">How a release moves</span><span class="label">Three checks before anything goes live</span></div>
+      <ol class="steps">
+        <li class="step"><span class="dot">1</span><b>Request</b><small>One sentence, from me</small></li>
+        <li class="step"><span class="dot">2</span><b>Brief</b><small>Written requirements</small></li>
+        <li class="step"><span class="dot">3</span><b>Research</b><small>Agents in parallel</small></li>
+        <li class="step"><span class="dot">4</span><b>Build</b><small>One builder agent</small></li>
+        <li class="step gate"><span class="dot">A</span><b>Automated checks</b><small>Must exit clean</small></li>
+        <li class="step gate"><span class="dot">B</span><b>Independent review</b><small>A model that didn't write it</small></li>
+        <li class="step live"><span class="dot">✓</span><b>Live</b><small>On my call</small></li>
+      </ol>
+    </div>
+
+    <div class="figs">
+      <div class="fig"><b>80+</b><span>judged review rounds on one app, most failed</span></div>
+      <div class="fig"><b>3</b><span>live public products below</span></div>
+      <div class="fig"><b>2,000+</b><span>commits since Aug 21, 2026</span></div>
+      <div class="fig"><b>35+</b><span>written architecture decisions</span></div>
+    </div>
+  </section>
+
+  <!-- Kurikaeshi -->
+  <section class="project" id="kurikaeshi">
+    <div class="media">
+      <div class="phones">
+        <div class="phone"><img src="img/kurikaeshi.jpg" width="780" height="1688" alt="Kurikaeshi's first screen on a phone: the app's name in brushed kanji, a sample flashcard showing 水, and buttons to sign in or write your own cards." loading="lazy"></div>
+        <div class="phone"><img src="img/kurikaeshi-back.jpg" width="780" height="1688" alt="The same sample card after a tap, showing the reading みず and the meaning water." loading="lazy"></div>
+      </div>
+      <p class="caption">The live app on a phone, before and after a tap</p>
+    </div>
+    <div class="text">
+      <div class="eyebrow"><span class="status">Live · v0.9.3</span><span class="label">Installable web app</span></div>
+      <h2>Kurikaeshi</h2>
+      <p class="what">A spaced-repetition Japanese study app. It installs to a phone, works offline, and can sync study history to an optional account.</p>
+      <div class="actions">
+        <a class="btn" href="https://ferrelldevin.github.io/studykit/kurikaeshi/">Open the app <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+      </div>
+      <ul class="stack" aria-label="Built with"><li>JavaScript</li><li>FSRS scheduling</li><li>Service worker</li><li>Auth0</li><li>Neon Postgres</li></ul>
+      <dl class="rows">
+        <div class="row"><dt class="label">Try it</dt><dd>Tap the sample card, then start studying. No account needed. Installed to a home screen, it keeps working in airplane mode.</dd></div>
+        <div class="row"><dt class="label">Built with</dt><dd>FSRS decides when each card comes back. The service worker keeps it running offline. Sign-in is optional, and synced study history sits in Neon Postgres with row-level security.</dd></div>
+        <div class="row"><dt class="label">How it ships</dt><dd>Automated tests run the app in a headless browser. Then an AI agent uses it the way its users would, never sees the source, and cites a screenshot for every finding. Last, a judge from a different AI vendor returns a pass-or-fail verdict. <span class="soft">More than 80 judged rounds so far; most failed and led to fixes.</span></dd></div>
+      </dl>
+      <div class="story">
+        <span class="label">Release story · one sentence, four rounds</span>
+        <div class="rounds" aria-label="Rounds 82 to 85">
+          <div class="round f">Round 82<b>Fail</b></div><div class="round f">Round 83<b>Fail</b></div><div class="round f">Round 84<b>Fail</b></div><div class="round p">Round 85<b>Pass</b></div>
+        </div>
+        <p>"Saved to your account" could appear before the upload had succeeded. Each fix proved one path, and the next round found another. It passed in round 85, once the line appeared only after the upload succeeded.</p>
+        <p class="lesson">If the screen claims something about the server, check every path to it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits kit -->
+  <section class="project flip" id="benefits">
+    <div class="media">
+      <div class="stacked">
+        <div class="browser">
+          <div class="chrome"><i></i><i></i><i></i><span>ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/</span></div>
+          <img src="img/kit.jpg" width="1920" height="1200" alt="The Veteran Benefits Kit front page: four cards for the Semester Pay Planner, Which Benefit Am I On, the Front-Desk Map, and the counselor's view." loading="lazy">
+        </div>
+        <div class="phone phone-tuck"><img src="img/planner.jpg" width="780" height="1688" alt="The Semester Pay Planner on a phone, with views for the veteran, the certifying official and a counselor, and step one: your benefit." loading="lazy"></div>
+      </div>
+      <p class="caption">The kit's front door, and the pay planner on a phone</p>
+    </div>
+    <div class="text">
+      <div class="eyebrow"><span class="status">Live</span><span class="label">Four pages · ODU</span></div>
+      <h2>Veteran Benefits Kit</h2>
+      <p class="what">Four pages for veteran students at ODU and the staff who help them: which VA education benefit you're on, a front-desk map of fourteen common situations, a semester pay planner, and QR codes for posters.</p>
+      <div class="actions">
+        <a class="btn" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/">Open the kit <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+        <a class="btn ghost" href="https://ferrelldevin.github.io/veteran-resources/education/odu-benefits-kit/planner/">Pay planner</a>
+      </div>
+      <ul class="stack" aria-label="Built with"><li>HTML</li><li>JavaScript</li><li>GitHub Pages</li><li>Cited to VA and 38 CFR</li></ul>
+      <dl class="rows">
+        <div class="row"><dt class="label">Try it</dt><dd>The planner shows, for each stretch of the term, whether you're above half time and the monthly figure that follows.</dd></div>
+        <div class="row"><dt class="label">Built with</dt><dd>Every rate and rule links to the VA page or federal regulation it comes from, so any figure can be checked at the source.</dd></div>
+        <div class="row"><dt class="label">How it ships</dt><dd>The three main pages each have a gate of hundreds of automated checks, a cross-page check holds the kit to the same figures, and each release of the main pages goes to an independent AI judge. The 2027 fiscal-year rates were staged in September behind a date check that refused to publish them before October 1.</dd></div>
+      </dl>
+      <div class="story">
+        <span class="label">Release story · a fraction rounded down</span>
+        <div class="money">
+          <span class="was">$0</span><span class="arrow">→</span><span class="now">$1,458</span>
+          <small>monthly figure for a 3-credit, eight-week class · the regulation keeps 6.75, the planner had floored it</small>
+        </div>
+        <p>The 2027 update found it, and it's fixed. A second lesson: In VA's drop-date rules, review kept finding one more branch. So the pages now cite the rules and send the student to the certifying official instead of guessing a date.</p>
+        <p class="lesson">When a summary keeps failing review, cite the rule instead of paraphrasing it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Class page -->
+  <section class="project" id="classpage">
+    <div class="media">
+      <div class="sheet" aria-label="Illustration: a lesson page with more than 160 answer fields">
+        <div class="label"><span>Class page</span><span>one self-contained file</span></div>
+        <div class="sheet-line m"></div><div class="sheet-line s"></div>
+        <div class="boxes" id="boxes" aria-hidden="true"></div>
+        <div class="sheet-line m"></div><div class="sheet-line s"></div>
+      </div>
+      <p class="caption">Illustration, not a screenshot: the course content isn't mine to post</p>
+    </div>
+    <div class="text">
+      <div class="eyebrow"><span class="status private">Not public</span><span class="label">Built for someone else</span></div>
+      <h2>A class page for an instructor</h2>
+      <p class="what">An instructor's class document for one lesson, rebuilt as one interactive page in the same order, with more than 160 answer fields.</p>
+      <ul class="stack" aria-label="Built with"><li>HTML</li><li>JavaScript</li><li>Node.js pipeline</li></ul>
+      <dl class="rows">
+        <div class="row"><dt class="label">What it is</dt><dd>One self-contained HTML file that opens in a browser with nothing to install. I shared it with the instructor in October 2026, noting that it was built with AI assistance. The content and its order belong to the instructor; I built the page.</dd></div>
+        <div class="row"><dt class="label">The pipeline</dt><dd>It comes from the same system that builds practice packs, worksheets and slide decks for two ODU Japanese courses. Build scripts generate each one and a gate checks it before release. The study materials have been shared with the instructors and revised on their feedback.</dd></div>
+        <div class="row"><dt class="label">Why no link</dt><dd>The course content belongs to the instructor, so it isn't posted. I'm glad to walk through how the page was built.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Study Kit -->
+  <section class="project flip" id="studykit">
+    <div class="media">
+      <div class="browser">
+        <div class="chrome"><i></i><i></i><i></i><span>ferrelldevin.github.io/studykit/</span></div>
+        <img src="img/studykit.jpg" width="1920" height="1200" alt="The Study Kit front page: free study sheets for ODU Japanese courses, with cards for Say It First, Kanji Quiz Prep and Writing the Thirty-Two." loading="lazy">
+      </div>
+      <p class="caption">The Study Kit front page</p>
+    </div>
+    <div class="text">
+      <div class="eyebrow"><span class="status">Live</span><span class="label">Study sheets + request page</span></div>
+      <h2>Study Kit</h2>
+      <p class="what">Free study sheets for ODU Japanese courses, plus a request page where a classmate can ask for practice built for a specific exam.</p>
+      <div class="actions">
+        <a class="btn" href="https://ferrelldevin.github.io/studykit/">Open Study Kit <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+        <a class="btn ghost" href="https://ferrelldevin.github.io/studykit/request/">Request page</a>
+      </div>
+      <ul class="stack" aria-label="Built with"><li>Node.js build scripts</li><li>Headless-browser verifier</li></ul>
+      <dl class="rows">
+        <div class="row"><dt class="label">Built with</dt><dd>Every sheet is generated from the assigned lessons. A verifier checks every link, checks the layout at four screen widths for overflow, and searches for text that must not appear, such as romanized Japanese.</dd></div>
+        <div class="row"><dt class="label">For others</dt><dd>Exam-prep kits have been built on request for individual classmates and delivered by e-mail since September 2026.</dd></div>
+      </dl>
+      <div class="story">
+        <span class="label">Release story · a word hiding inside a word</span><span class="label" style="margin-top:-8px">Patterns simplified</span>
+        <div class="regex">\bkimashita\b &nbsp;→&nbsp; hatara<mark>kimashita</mark> <span class="soft">not matched</span><br><span class="ok">kimashita$ &nbsp;→&nbsp; matched by ending</span></div>
+        <p>The search for banned words anchored on word boundaries, so a banned form could hide inside a longer word, and one did. It was found by scanning the files before publishing, not by the check. The check now matches endings.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- System -->
+  <section class="project" id="system">
+    <div class="media">
+      <div class="agents" aria-label="The agents and their separate roles">
+        <div class="agent"><b>Researcher</b><span>Brings back sources, each one dated and marked backed or unbacked</span></div>
+        <div class="agent"><b>Designer</b><span>Root cause, the smallest fix, the checks that must fail first</span></div>
+        <div class="agent"><b>Builder</b><span>One per change; writes the code</span></div>
+        <div class="agent"><b>Gate checker</b><span>Checks the result blind, without having built it</span></div>
+        <div class="agent"><b>UI tester</b><span>Uses the app with no source and no script</span></div>
+        <div class="agent judge"><b>Outside judge</b><span>A different vendor's model judges the release</span></div>
+        <div class="guard"><b>8 guard scripts</b> with their own tests block credentials and personal data in commits, and refuse to publish a page whose review failed.</div>
+      </div>
+    </div>
+    <div class="text">
+      <div class="eyebrow"><span class="status private">Private repository</span><span class="label">Claude Code</span></div>
+      <h2>The system behind all of it</h2>
+      <p class="what">A multi-agent development setup on Claude Code. It takes a one-sentence request to a published, checked result.</p>
+      <dl class="rows">
+        <div class="row"><dt class="label">How it works</dt><dd>A written brief, research agents working in parallel, one builder, automated checks, then a reviewer that didn't write the work. Git worktrees let several sessions work in parallel.</dd></div>
+        <div class="row"><dt class="label">Record</dt><dd>More than 35 architecture decision records and over 2,000 commits since August 21, 2026.</dd></div>
+        <div class="row"><dt class="label">Why</dt><dd>An AI builder can't grade its own work. A different agent checks it, and for releases a different vendor's model reviews it before I decide whether it ships.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="close">
+    <div class="learn">
+      <span class="label">Next</span>
+      <h2>What I haven't done yet</h2>
+      <p>Machine learning and PyTorch, then Django, Unity and AWS. I want to learn them on real projects with a mentor.</p>
+    </div>
+    <div class="gh">
+      <span class="label">Also on GitHub</span>
+      <a href="https://github.com/ferrelldevin/resume-gate"><b>resume-gate</b><span>A build gate for the resume claims it can check mechanically. Its README is mostly about what the gate couldn't catch.</span></a>
+      <a href="https://github.com/ferrelldevin/va-chapter31-worksheet"><b>Chapter 31 case study</b><span>A VA benefits calculator that failed an independent review. I published a case study of the failure instead of shipping the tool.</span></a>
+    </div>
+  </section>
+</main>
+
+<footer class="shell">
+  <span>Updated October 5, 2026 · version numbers and counts as of that date</span>
+  <span>Screenshots are of the live pages</span>
+</footer>
+
+<script>
+(function(){
+  var b=document.getElementById('themeBtn'),r=document.documentElement;
+  function label(){b.textContent=r.getAttribute('data-theme')==='dark'?'Light':'Dark'}
+  label();
+  b.addEventListener('click',function(){var t=r.getAttribute('data-theme')==='dark'?'light':'dark';r.setAttribute('data-theme',t);r.style.colorScheme=t;try{localStorage.setItem('theme',t)}catch(e){}label()});
+  var box=document.getElementById('boxes');
+  if(box){var f=document.createDocumentFragment();for(var i=0;i<163;i++)f.appendChild(document.createElement('i'));box.appendChild(f);}
+})();
+</script>
+</body>
+</html>
