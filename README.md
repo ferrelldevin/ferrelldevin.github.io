@@ -1,8 +1,8 @@
 # ferrelldevin.github.io
 
-The root of every GitHub Pages site under this account: one page listing them all, with a filter box.
+**Retired 21 Oct 2026.** This repo used to hold the Pages Switchboard, one page listing every GitHub Pages site under this account. The root page now says it is retired and links the sites that are still live. The repo is archived (read-only).
 
-- Live: https://ferrelldevin.github.io/
+- To restore: unarchive the repo in its settings, then `git revert` the retirement commit. The old index is at commit bb62a67.
+- `projects/` is unchanged and still served.
 
-Rendered from the source of record by a publish script that refuses to write when any live
-address is missing from the list or the page's own gate fails. © 2026 Devin Ferrell.
+© 2026 Devin Ferrell.
